@@ -30,9 +30,10 @@ def quick_register(module):
     name = module.__name__
     if name in MODULES:
         if MODULES[name] == module:
+            breakpoint()
             print("The module {} is already registered. ".format(name))
         else:
-            print("The different module with name {} is already registered. ".format(name))
+            print("A different module with name {} is already registered. ".format(name))
             exit(-1)
     try:
         MODULES[name] = module
