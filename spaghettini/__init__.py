@@ -29,12 +29,9 @@ def check_registered():
 def quick_register(module):
     name = module.__name__
     if name in MODULES:
-        if MODULES[name] == module:
+        if repr(module) == repr(MODULES[name]):
             print("The module {} is already registered. ".format(name))
         else:
-            breakpoint()
-            print(module)
-            print(MODULES[module])
             print("A different module with name {} is already registered. ".format(name))
             exit(-1)
     try:
