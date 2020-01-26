@@ -28,7 +28,12 @@ def check_registered():
 
 def quick_register(module):
     name = module.__name__
-    assert name not in MODULES, "The module with {} is already registered. ".format(name)
+    if name in MODULES:
+        if MODULES[name] == module:
+            print("The module {} is already registered. ".format(name))
+        else:
+            print("The different module with name {} is already registered. ".format(name))
+            exit(-1)
     try:
         MODULES[name] = module
     except Exception as e:
@@ -79,7 +84,7 @@ def configure(d, record_config=False, verbose=False):
         def core(*args, **kwargs):
             configure_fn = functools.partial(configure, record_config=record_config, verbose=verbose)
             extra_kwargs = {k: configure_fn(d[k]) for k in filter(lambda x:
-                                                               (not x.endswith(">") and not x.startswith("<")), d)}
+                                                                  (not x.endswith(">") and not x.startswith("<")), d)}
             if "<list>" in d:
                 extra_args = tuple(map(configure_fn, d["<list>"]))
             else:

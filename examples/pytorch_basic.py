@@ -8,5 +8,5 @@ quick_register(nn.Sequential)
 print(check())
 print(check_registered())
 
-net = load("examples/assets/pytorch.yaml", verbose=True)
+net = load("./assets/pytorch.yaml", verbose=True)
 print(net)
