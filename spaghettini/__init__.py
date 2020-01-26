@@ -32,7 +32,7 @@ def quick_register(module):
         if MODULES[name] == module:
             breakpoint()
             print(module)
-            print(MODULES(module))
+            print(MODULES[module])
             print("The module {} is already registered. ".format(name))
         else:
             print("A different module with name {} is already registered. ".format(name))
