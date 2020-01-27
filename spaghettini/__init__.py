@@ -132,3 +132,8 @@ def load(path, verbose=False):
         return configure(x, record_config=True, verbose=verbose)
     return None
 
+
+def clear_modules():
+    MODULES = dict()
+
+
