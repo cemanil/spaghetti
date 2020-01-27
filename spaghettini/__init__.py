@@ -30,7 +30,7 @@ def check_registered():
 def quick_register(module):
     name = module.__name__
     if name in MODULES:
-        if inspect.getsource(module) == inspect.getsource(MODULES[name]):
+        if inspect.getsourcefile(module) == inspect.getsourcefile(MODULES[name]):
             print("The module {} is already registered. ".format(name))
         else:
             print("A different module with name {} is already registered. ".format(name))
