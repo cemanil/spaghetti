@@ -30,7 +30,12 @@ def check_registered():
 def quick_register(module):
     name = module.__name__
     if name in MODULES:
-        if inspect.getsourcefile(module) == inspect.getsourcefile(MODULES[name]):
+        try:
+            is_same_module = inspect.getsourcefile(module) == inspect.getsourcefile(MODULES[name])
+        except:
+            print("Make sure module {} is not being overloaded!")
+            is_same_module = module.__dict__.keys() == MODULES[name].__dict__.keys()
+        if is_same_module:
             print("The module {} is already registered. ".format(name))
         else:
             print("A different module with name {} is already registered. ".format(name))
