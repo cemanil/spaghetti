@@ -133,7 +133,7 @@ def load(path, verbose=False):
     return None
 
 
-def clear_modules():
+def clear():
     MODULES = dict()
 
 
