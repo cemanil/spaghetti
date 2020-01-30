@@ -39,7 +39,7 @@ def quick_register(module):
             print("The module {} is already registered. ".format(name))
         else:
             print("A different module with name {} is already registered. ".format(name))
-            exit(-1)
+            raise NameError
     try:
         MODULES[name] = module
     except Exception as e:
