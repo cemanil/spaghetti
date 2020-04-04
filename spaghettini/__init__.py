@@ -39,6 +39,7 @@ def quick_register(module):
             print("The module {} is already registered. ".format(name))
         else:
             print("A different module with name {} is already registered. ".format(name))
+            print(f"Module repr is {MODULES[name].__repr__}")
             raise NameError
     try:
         MODULES[name] = module
@@ -123,13 +124,13 @@ def configure(d, record_config=False, verbose=False):
     return d
 
 
-def load(path, verbose=False):
+def load(path, verbose=False, record_config=True):
     if path.endswith("yaml"):
         with open(path, "r") as f:
             x = yaml.safe_load(f)
         if verbose:
             print(">>>>>>>>  Configuring from '{}'. ".format(path))
-        return configure(x, record_config=True, verbose=verbose)
+        return configure(x, record_config=record_config, verbose=verbose)
     return None
 
 
