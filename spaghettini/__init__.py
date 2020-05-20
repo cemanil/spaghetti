@@ -75,6 +75,14 @@ def get(name):
 
 def configure(d, record_config=False, verbose=False):
     if type(d) == dict:
+        # Strip off the hparam string from the key, if it exists.
+        cleaned_d = dict()
+        for key, value in d.items():
+            if _contains_hparam_key(key):
+                key = _strip_off_hparam_key(key)
+            cleaned_d[key] = value
+        d = cleaned_d
+
         new_d = {}
         for key, value in d.items():
             if key.startswith("[") and key.endswith("]"):
@@ -124,17 +132,67 @@ def configure(d, record_config=False, verbose=False):
     return d
 
 
-def load(path, verbose=False, record_config=True):
+def gather_hparams_from_config(d, hparams_dict):
+    # Note: overrides hparams_dict by aliasing.
+    assert isinstance(hparams_dict, dict)
+
+    # Check if non-leaf.
+    if isinstance(d, dict):
+        # Check if children has hparameter arguments.
+        for k, v in d.items():
+            if isinstance(k, str) and _contains_hparam_key(k):
+                assert isinstance(v, (float, int, str)), f"Hparameters can only be int, float or str. " \
+                                                         f"The current one, corresponding to key {k} is {type(v)}. "
+                hparam_key = _get_hparam_key(k)
+                hparams_dict[hparam_key] = v
+
+            # Recurse.
+            gather_hparams_from_config(v, hparams_dict)
+    if isinstance(d, list):
+        for leaf_d in d:
+            gather_hparams_from_config(leaf_d, hparams_dict)
+
+
+def _contains_hparam_key(key: str):
+    check_1 = key.count("(") == 1 and key.count(")") == 1
+    check_2 = key.find("(") < key.find(")")
+    return check_1 and check_2
+
+
+def _get_hparam_key(key: str):
+    idx1, idx2 = key.find("(") + 1, key.find(")")
+
+    return key[idx1:idx2]
+
+
+def _strip_off_hparam_key(key: str):
+    idx1, idx2 = key.find("("), key.find(")") + 1
+    return key[:idx1] + key[idx2:]
+
+
+def load(path, gather_hparams=True, verbose=False, record_config=True):
     if path.endswith("yaml"):
         with open(path, "r") as f:
             x = yaml.safe_load(f)
         if verbose:
             print(">>>>>>>>  Configuring from '{}'. ".format(path))
-        return configure(x, record_config=record_config, verbose=verbose)
+
+        # Configure the modules.
+        configured = configure(x, record_config=record_config, verbose=verbose)
+
+        # Gather the hyperparameters, if asked.
+        hparams_dict = dict()
+        if gather_hparams:
+            gather_hparams_from_config(x, hparams_dict)
+
+        # Return.
+        return configured if not gather_hparams else (configured, hparams_dict)
+
     return None
 
 
 def clear_registered_modules():
+    print("This function is not debugged yet.  ")
     MODULES = dict()
 
 

@@ -1,9 +1,9 @@
 <type>: Sequential
 <init>: True
 <list>:
-- <type>: Linear
+- <type>(first_layer_type): Linear
   <init>: True
-  in_features: 1
+  in_features(in_feats): 1
   out_features: 32
 - <type>: relu
   <init>: True
