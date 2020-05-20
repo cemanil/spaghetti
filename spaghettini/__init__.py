@@ -170,7 +170,7 @@ def _strip_off_hparam_key(key: str):
     return key[:idx1] + key[idx2:]
 
 
-def load(path, gather_hparams=True, verbose=False, record_config=True):
+def load(path, gather_hparams=False, verbose=False, record_config=True):
     if path.endswith("yaml"):
         with open(path, "r") as f:
             x = yaml.safe_load(f)
